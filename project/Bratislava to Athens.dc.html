@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/broadsheet-5e0ee81f-8290-49a5-b2cd-d23acadfb7b0/styles.css">
+<script src="_ds/broadsheet-5e0ee81f-8290-49a5-b2cd-d23acadfb7b0/_ds_bundle.js"></script>
+<style>body{margin:0;background:var(--color-bg)}a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--color-accent)}input[type=checkbox]{width:22px;height:22px;margin:0;accent-color:var(--color-accent);flex:none}</style>
+</helmet>
+<div style="max-width:480px;margin:0 auto;font-size:17px;line-height:1.5;color:var(--color-text);padding-bottom:110px">
+
+  <header style="padding:var(--space-6) var(--space-4) var(--space-2)">
+    <div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-neutral-700)">3-day low-snow motorway drive</div>
+    <h1 style="font-size:38px;margin:var(--space-1) 0 var(--space-1);text-wrap:balance">Bratislava → Athens</h1>
+    <div style="font-size:14px;color:var(--color-neutral-700)">2023 Mazda 2 Hybrid · 95 unleaded · 36 L tank</div>
+  </header>
+
+  <div style="position:sticky;top:0;z-index:5;background:var(--color-bg);padding:var(--space-3) var(--space-4);box-shadow:{{ stickyShadow }}">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-3)">
+      <div style="display:flex;flex-direction:column">
+        <span style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-neutral-700)">Driving cost</span>
+        <span style="font-family:var(--font-heading);font-weight:600;font-size:40px;line-height:1">{{ tot.cost }}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;font-size:15px;line-height:1.35;text-align:right">
+        <span><strong>{{ tot.km }}</strong> km · <strong>{{ tot.litres }}</strong> L</span>
+        <span style="color:var(--color-neutral-700)">fuel {{ tot.fuel }} · fees {{ tot.fees }}</span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:var(--space-2)">
+      <span style="font-size:13px;color:var(--color-neutral-700)">{{ speed }} km/h · {{ consLabel }} L/100 km</span>
+      <button class="btn btn-ghost" style="min-height:44px;font-size:15px" onClick="{{ toggleAdjust }}">{{ adjustLabel }}</button>
+    </div>
+    <sc-if value="{{ adjust }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:var(--space-4);padding:var(--space-2) 0 var(--space-3)">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><span>Planning speed, blended</span><strong>{{ speed }} km/h</strong></div>
+          <input type="range" min="90" max="125" step="1" value="{{ speed }}" onChange="{{ onSpeed }}" aria-label="Planning speed">
+          <div style="font-size:13px;color:var(--color-neutral-700)">Default 105. Borders, towns and roadworks pull the average below the 130 limit. Plus 3 × 10 min stops a day.</div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><span>Burn</span><strong>{{ consLabel }} L/100 km</strong></div>
+          <input type="range" min="5.2" max="6.7" step="0.1" value="{{ cons }}" onChange="{{ onCons }}" aria-label="Fuel consumption">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-2)">
+            <sc-for list="{{ presets }}" as="p" hint-placeholder-count="3">
+              <button class="{{ p.cls }}" style="min-height:52px;flex-direction:column;gap:0;font-size:15px;padding:var(--space-1)" onClick="{{ p.set }}"><span>{{ p.v }}</span><span style="font-size:11px;font-weight:400">{{ p.label }}</span></button>
+            </sc-for>
+          </div>
+          <div style="font-size:13px;color:var(--color-neutral-700);margin-top:var(--space-2)">Full tank ≈ {{ rangeKm }} km at this burn. Plan fills around 450 km.</div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <main style="padding:0 var(--space-4)">
+
+    <sc-if value="{{ isDays }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:56px;padding-top:var(--space-6)">
+
+        <section data-screen-label="Day 1">
+          <div style="display:flex;align-items:flex-end;gap:var(--space-4)">
+            <sc-if value="{{ plates }}" hint-placeholder-val="{{ true }}"><span class="cmyk-num" style="display:inline-block;font-family:var(--font-heading);font-weight:600;font-size:72px"><span class="paper">1</span><span class="plate plate-c" aria-hidden="true">1</span><span class="plate plate-m" aria-hidden="true">1</span><span class="plate plate-y" aria-hidden="true">1</span></span></sc-if>
+            <sc-if value="{{ plain }}" hint-placeholder-val="{{ false }}"><span style="font-family:var(--font-heading);font-weight:600;font-size:72px;line-height:0.9">1</span></sc-if>
+            <div><div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent-700)">Day 1</div><h2 style="font-size:27px;margin:0">Bratislava → Sibiu</h2></div>
+          </div>
+          <div style="font-size:15px;margin:var(--space-3) 0;color:var(--color-neutral-800);text-wrap:pretty">Short Slovak motorway, Hungary M1, into Romania at Nădlac, Romanian A1 to Sibiu.</div>
+          <a class="btn btn-primary" style="width:100%;min-height:52px;font-size:16px;margin-bottom:var(--space-4);text-decoration:none" href="{{ d1.maps }}" target="_blank" rel="noopener">Directions in Google Maps ↗</a>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-4) var(--space-3)">
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Distance</div><div style="font-size:24px;font-weight:600">{{ d1.km }} km</div></div>
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Pure</div><div style="font-size:24px;font-weight:600">{{ d1.pure }}</div></div>
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Elapsed</div><div style="font-size:24px;font-weight:600">{{ d1.elapsed }}</div></div>
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Fuel</div><div style="font-size:24px;font-weight:600">{{ d1.litres }} L</div></div>
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Fuel cost</div><div style="font-size:24px;font-weight:600">{{ d1.fuel }}</div></div>
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Fees</div><div style="font-size:24px;font-weight:600">{{ d1.fees }}</div></div>
+          </div>
+          <div style="margin-top:var(--space-4);font-size:15px">
+            <div style="font-weight:600;margin-bottom:var(--space-1)">Buy all three vignettes this morning</div>
+            <sc-for list="{{ d1.lines }}" as="l" hint-placeholder-count="3">
+              <div style="display:flex;justify-content:space-between;gap:var(--space-3);padding:4px 0"><span>{{ l.label }}</span><span>{{ l.price }}</span></div>
+            </sc-for>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:var(--space-3);font-size:19px"><span>Day cash</span><strong>{{ d1.cash }}</strong></div>
+          <div style="font-size:13px;color:var(--color-neutral-700)">Fuel split: Slovakia 20 · Hungary 390 · Romania 405 km</div>
+          <button class="btn btn-secondary" style="width:100%;justify-content:space-between;min-height:56px;margin-top:var(--space-4);font-size:16px;text-align:left" onClick="{{ goHotels }}"><span style="display:flex;flex-direction:column;align-items:flex-start;gap:2px"><span style="font-size:12px;font-weight:400;color:var(--color-neutral-700)">Sleep — Sibiu</span><span>{{ pick1.name }}</span></span><span style="font-weight:400">{{ pick1.price }} →</span></button>
+        </section>
+
+        <section data-screen-label="Day 2">
+          <div style="display:flex;align-items:flex-end;gap:var(--space-4)">
+            <sc-if value="{{ plates }}" hint-placeholder-val="{{ true }}"><span class="cmyk-num" style="display:inline-block;font-family:var(--font-heading);font-weight:600;font-size:72px"><span class="paper">2</span><span class="plate plate-c" aria-hidden="true">2</span><span class="plate plate-m" aria-hidden="true">2</span><span class="plate plate-y" aria-hidden="true">2</span></span></sc-if>
+            <sc-if value="{{ plain }}" hint-placeholder-val="{{ false }}"><span style="font-family:var(--font-heading);font-weight:600;font-size:72px;line-height:0.9">2</span></sc-if>
+            <div><div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent-700)">Day 2</div><h2 style="font-size:27px;margin:0">Sibiu → Alexandroupoli</h2></div>
+          </div>
+          <div style="font-size:15px;margin:var(--space-3) 0;color:var(--color-neutral-800);text-wrap:pretty">Pitești → Giurgiu–Ruse → Bulgarian A2 via Veliko Tarnovo and Stara Zagora → Ormenio. Not via Sofia. Not via Kulata–Promachonas.</div>
+          <a class="btn btn-primary" style="width:100%;min-height:52px;font-size:16px;margin-bottom:var(--space-4);text-decoration:none" href="{{ d2.maps }}" target="_blank" rel="noopener">Directions in Google Maps ↗</a>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-4) var(--space-3)">
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Distance</div><div style="font-size:24px;font-weight:600">{{ d2.km }} km</div></div>
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Pure</div><div style="font-size:24px;font-weight:600">{{ d2.pure }}</div></div>
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Elapsed</div><div style="font-size:24px;font-weight:600">{{ d2.elapsed }}</div></div>
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Fuel</div><div style="font-size:24px;font-weight:600">{{ d2.litres }} L</div></div>
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Fuel cost</div><div style="font-size:24px;font-weight:600">{{ d2.fuel }}</div></div>
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Fees</div><div style="font-size:24px;font-weight:600">{{ d2.fees }}</div></div>
+          </div>
+          <div style="margin-top:var(--space-4);padding:var(--space-3) var(--space-4);background:var(--color-accent-100);color:var(--color-accent-900);border-radius:var(--radius-md);font-size:16px;text-wrap:pretty"><strong>Fill to the brim in Bulgaria before Ormenio.</strong> Bulgaria is €1.66/L, Greece €2.19. A full 36 L tank bought in Bulgaria saves about €19.</div>
+          <div style="margin-top:var(--space-4);font-size:15px">
+            <sc-for list="{{ d2.lines }}" as="l" hint-placeholder-count="2">
+              <div style="display:flex;justify-content:space-between;gap:var(--space-3);padding:4px 0"><span>{{ l.label }}</span><span>{{ l.price }}</span></div>
+            </sc-for>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:var(--space-3);font-size:19px"><span>Day cash</span><strong>{{ d2.cash }}</strong></div>
+          <div style="font-size:13px;color:var(--color-neutral-700)">Fuel split: Romania 290 · Bulgaria 400 · Greece 110 km</div>
+          <p style="font-size:14px;margin:var(--space-3) 0 0;color:var(--color-neutral-800);text-wrap:pretty">Single-lane works on the Ruse bridge were scheduled 19–22 and 26–29 Oct 2026, daytime. If those dates apply, add border time.</p>
+          <button class="btn btn-secondary" style="width:100%;justify-content:space-between;min-height:56px;margin-top:var(--space-4);font-size:16px;text-align:left" onClick="{{ goHotels }}"><span style="display:flex;flex-direction:column;align-items:flex-start;gap:2px"><span style="font-size:12px;font-weight:400;color:var(--color-neutral-700)">Sleep — Alexandroupoli</span><span>{{ pick2.name }}</span></span><span style="font-weight:400">{{ pick2.price }} →</span></button>
+        </section>
+
+        <section data-screen-label="Day 3">
+          <div style="display:flex;align-items:flex-end;gap:var(--space-4)">
+            <sc-if value="{{ plates }}" hint-placeholder-val="{{ true }}"><span class="cmyk-num" style="display:inline-block;font-family:var(--font-heading);font-weight:600;font-size:72px"><span class="paper">3</span><span class="plate plate-c" aria-hidden="true">3</span><span class="plate plate-m" aria-hidden="true">3</span><span class="plate plate-y" aria-hidden="true">3</span></span></sc-if>
+            <sc-if value="{{ plain }}" hint-placeholder-val="{{ false }}"><span style="font-family:var(--font-heading);font-weight:600;font-size:72px;line-height:0.9">3</span></sc-if>
+            <div><div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent-2-700)">Day 3 · the heavy day</div><h2 style="font-size:27px;margin:0">Alexandroupoli → Athens</h2></div>
+          </div>
+          <div style="font-size:15px;margin:var(--space-3) 0;color:var(--color-neutral-800);text-wrap:pretty">Kavala → Thessaloniki → Athens, Greek A2 then A1. All of it in Greece.</div>
+          <a class="btn btn-primary" style="width:100%;min-height:52px;font-size:16px;margin-bottom:var(--space-4);text-decoration:none" href="{{ d3.maps }}" target="_blank" rel="noopener">Directions in Google Maps ↗</a>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-4) var(--space-3)">
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Distance</div><div style="font-size:24px;font-weight:600">{{ d3.km }} km</div></div>
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Pure</div><div style="font-size:24px;font-weight:600">{{ d3.pure }}</div></div>
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Elapsed</div><div style="font-size:24px;font-weight:600">{{ d3.elapsed }}</div></div>
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Fuel</div><div style="font-size:24px;font-weight:600">{{ d3.litres }} L</div></div>
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Fuel cost</div><div style="font-size:24px;font-weight:600">{{ d3.fuel }}</div></div>
+            <div><div style="font-size:12px;color:var(--color-neutral-700)">Tolls</div><div style="font-size:24px;font-weight:600">{{ d3.fees }}</div></div>
+          </div>
+          <div style="margin-top:var(--space-4);padding:var(--space-3) var(--space-4);background:var(--color-accent-100);color:var(--color-accent-900);border-radius:var(--radius-md);font-size:16px;text-wrap:pretty"><strong>One fuel stop, even if you entered full.</strong> Do it after roughly 400 km, Thessaloniki–Larissa, not in the first hour.</div>
+          <div style="margin-top:var(--space-3);padding:var(--space-3) var(--space-4);background:var(--color-accent-2-100);color:var(--color-accent-2-900);border-radius:var(--radius-md);font-size:16px;text-wrap:pretty"><strong>Wrist.</strong> Longest toll stretch, most expensive fuel, and a full motorway day on the right wrist. Ease off if it is sore.</div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:var(--space-4);font-size:19px"><span>Day cash</span><strong>{{ d3.cash }}</strong></div>
+          <button class="btn btn-secondary" style="width:100%;justify-content:space-between;min-height:52px;margin-top:var(--space-3);font-size:16px" onClick="{{ toggleTolls }}"><span>17 toll stations · {{ tollsLeft }} left to pay</span><span style="font-weight:400">{{ tollsChevron }}</span></button>
+          <sc-if value="{{ tollsOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:var(--space-4);margin-top:var(--space-3)">
+              <sc-for list="{{ tollGroups }}" as="g" hint-placeholder-count="2">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-neutral-700);padding-bottom:4px"><span>{{ g.name }}</span><span>{{ g.total }}</span></div>
+                  <sc-for list="{{ g.items }}" as="t" hint-placeholder-count="6">
+                    <label style="display:flex;align-items:center;gap:var(--space-3);min-height:44px;cursor:pointer;font-size:16px"><input type="checkbox" checked="{{ t.paid }}" onChange="{{ t.toggle }}"><span style="flex:1;opacity:{{ t.op }}">{{ t.name }}</span><span style="opacity:{{ t.op }}">€{{ t.price }}</span></label>
+                  </sc-for>
+                </div>
+              </sc-for>
+              <div style="font-size:13px;color:var(--color-neutral-700)">Car, 2026 prices checked 30 Sep 2026. Cash or card. Same price either direction.</div>
+            </div>
+          </sc-if>
+          <div style="margin-top:var(--space-4);font-size:16px;display:flex;justify-content:space-between;gap:var(--space-3)"><span>Arrive Athens</span><span style="color:var(--color-neutral-700)">hotel not planned</span></div>
+        </section>
+
+        <div style="font-size:13px;color:var(--color-neutral-700);text-wrap:pretty">Prices indicative, October 2026 plan. Not a live booking or a live pump feed. Country km are planning splits for fuel pricing, not a surveyed odometer.</div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isRoute }}" hint-placeholder-val="{{ false }}">
+      <div style="padding-top:var(--space-6)" data-screen-label="Route">
+        <h2 style="font-size:27px">Country rail</h2>
+        <p style="font-size:15px;color:var(--color-neutral-800)">{{ tot.litres }} L over {{ tot.km }} km is about {{ tanks }} tanks. Leave full, budget four more fills, the last in Greece.</p>
+        <div style="display:flex;flex-direction:column;gap:var(--space-6);margin-top:var(--space-4)">
+          <sc-for list="{{ countries }}" as="c" hint-placeholder-count="5">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-3)">
+                <h3 style="font-size:23px;margin:0">{{ c.name }}</h3>
+                <sc-if value="{{ c.tag }}"><span class="{{ c.tagCls }}">{{ c.tag }}</span></sc-if>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--space-2);margin:var(--space-2) 0 var(--space-3);font-size:15px">
+                <div><div style="font-size:11px;color:var(--color-neutral-700)">km</div><strong>{{ c.km }}</strong></div>
+                <div><div style="font-size:11px;color:var(--color-neutral-700)">€/L</div><strong>{{ c.price }}</strong></div>
+                <div><div style="font-size:11px;color:var(--color-neutral-700)">litres</div><strong>{{ c.litres }}</strong></div>
+                <div><div style="font-size:11px;color:var(--color-neutral-700)">fuel</div><strong>{{ c.fuel }}</strong></div>
+              </div>
+              <div style="display:flex;flex-direction:column;border-left:2px solid var(--color-accent-300);margin-left:6px">
+                <sc-for list="{{ c.stops }}" as="s" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:var(--space-3);min-height:40px;margin-left:-8px">
+                    <span style="width:14px;height:14px;border-radius:50%;flex:none;background:{{ s.dot }};box-shadow:0 0 0 3px var(--color-bg)"></span>
+                    <span style="font-size:17px;font-weight:{{ s.weight }}">{{ s.n }}</span>
+                    <span style="font-size:13px;color:var(--color-neutral-700)">{{ s.note }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isFees }}" hint-placeholder-val="{{ false }}">
+      <div style="padding-top:var(--space-6)" data-screen-label="Fees">
+        <h2 style="font-size:27px">Road fees</h2>
+        <p style="font-size:15px;color:var(--color-neutral-800)">Car, one way. Bought before you roll. Plate-based, nothing on the glass. {{ boughtCount }} of 4 bought.</p>
+        <div style="display:flex;flex-direction:column;gap:var(--space-4);margin-top:var(--space-4)">
+          <sc-for list="{{ vignettes }}" as="f" hint-placeholder-count="4">
+            <div style="display:flex;gap:var(--space-3);align-items:flex-start">
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;justify-content:space-between;gap:var(--space-2);font-size:18px"><strong>{{ f.country }}</strong><strong>{{ f.price }}</strong></div>
+                <div style="font-size:14px;color:var(--color-neutral-800);text-wrap:pretty">{{ f.what }}</div>
+                <a href="{{ f.url }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;min-height:44px;font-size:15px">Official shop: {{ f.shop }} ↗</a>
+              </div>
+              <button class="{{ f.cls }}" style="min-height:44px;min-width:84px" onClick="{{ f.toggle }}" aria-pressed="{{ f.bought }}">{{ f.label }}</button>
+            </div>
+          </sc-for>
+          <div style="display:flex;flex-direction:column">
+            <div style="display:flex;justify-content:space-between;gap:var(--space-2);font-size:18px"><strong>Giurgiu–Ruse bridge</strong><strong>{{ bridgePrice }}</strong></div>
+            <div style="font-size:14px;color:var(--color-neutral-800);text-wrap:pretty">Southbound. The Romanian car toll was repealed on 1 Oct 2026. The Bulgarian €2 is charged leaving Bulgaria, not on this direction.</div>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <div style="display:flex;justify-content:space-between;gap:var(--space-2);font-size:18px"><strong>Greece</strong><strong>€50.95</strong></div>
+            <div style="font-size:14px;color:var(--color-neutral-800)">No vignette. 17 toll stations, cash or card. {{ tollsLeft }} left to pay.</div>
+          </div>
+        </div>
+
+        <h3 style="font-size:21px;margin-top:var(--space-8)">If plans change</h3>
+        <div style="display:flex;flex-direction:column">
+          <sc-for list="{{ adders }}" as="a" hint-placeholder-count="3">
+            <label style="display:flex;align-items:center;gap:var(--space-3);min-height:56px;cursor:pointer;font-size:16px"><input type="checkbox" checked="{{ a.on }}" onChange="{{ a.toggle }}"><span style="flex:1;text-wrap:pretty">{{ a.label }}</span><span style="white-space:nowrap;color:var(--color-neutral-700)">{{ a.delta }}</span></label>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:var(--space-4);font-size:21px"><span>Road fees</span><strong>{{ tot.feesExact }}</strong></div>
+
+        <h3 style="font-size:21px;margin-top:var(--space-8)">Greek booths</h3>
+        <div style="display:flex;flex-direction:column;gap:var(--space-4)">
+          <sc-for list="{{ tollGroups }}" as="g" hint-placeholder-count="2">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-neutral-700);padding-bottom:4px"><span>{{ g.name }}</span><span>{{ g.total }}</span></div>
+              <sc-for list="{{ g.items }}" as="t" hint-placeholder-count="6">
+                <label style="display:flex;align-items:center;gap:var(--space-3);min-height:44px;cursor:pointer;font-size:16px"><input type="checkbox" checked="{{ t.paid }}" onChange="{{ t.toggle }}"><span style="flex:1;opacity:{{ t.op }}">{{ t.name }}</span><span style="opacity:{{ t.op }}">€{{ t.price }}</span></label>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+        <p style="font-size:13px;color:var(--color-neutral-700);margin-top:var(--space-4)">Indicative, October 2026 plan.</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isHotels }}" hint-placeholder-val="{{ false }}">
+      <div style="padding-top:var(--space-6);display:flex;flex-direction:column;gap:var(--space-8)" data-screen-label="Hotels">
+        <sc-for list="{{ nights }}" as="n" hint-placeholder-count="2">
+          <div>
+            <div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent-700)">{{ n.label }}</div>
+            <h2 style="font-size:27px">{{ n.city }}</h2>
+            <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+              <sc-for list="{{ n.hotels }}" as="h" hint-placeholder-count="2">
+                <div class="card" style="box-shadow:{{ h.ring }};padding:var(--space-4)">
+                <button style="display:flex;flex-direction:column;gap:var(--space-2);text-align:left;font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;width:100%" onClick="{{ h.pick }}" aria-pressed="{{ h.selected }}">
+                  <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;min-height:20px">
+                    <sc-if value="{{ h.onRoute }}"><span class="tag tag-accent">On the route</span></sc-if>
+                    <sc-if value="{{ h.selected }}"><span class="tag tag-neutral">Your pick</span></sc-if>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-3)"><span class="card-title" style="font-size:20px">{{ h.name }}</span><span style="white-space:nowrap;font-weight:600">{{ h.price }}</span></div>
+                  <div style="display:grid;grid-template-columns:auto 1fr;gap:4px var(--space-3);font-size:15px">
+                    <span style="color:var(--color-neutral-700)">Stars</span><span>{{ h.stars }}</span>
+                    <span style="color:var(--color-neutral-700)">Breakfast</span><span>{{ h.breakfast }}</span>
+                    <span style="color:var(--color-neutral-700)">Parking</span><span>{{ h.parking }}</span>
+                    <span style="color:var(--color-neutral-700)">Detour</span><span>{{ h.detour }}</span>
+                  </div>
+                  <sc-if value="{{ h.extra }}"><div style="font-size:14px;color:var(--color-neutral-800)">{{ h.extra }}</div></sc-if>
+                </button>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2);margin-top:var(--space-1)">
+                  <a class="btn btn-secondary" style="min-height:44px;text-decoration:none" href="{{ h.booking }}" target="_blank" rel="noopener">Booking.com ↗</a>
+                  <a class="btn btn-secondary" style="min-height:44px;text-decoration:none" href="{{ h.map }}" target="_blank" rel="noopener">Map ↗</a>
+                </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+        <p style="font-size:13px;color:var(--color-neutral-700)">Guide prices per night, indicative, October 2026 plan. Not a live booking. Hotels are separate from the driving cost.</p>
+      </div>
+    </sc-if>
+  </main>
+
+  <nav style="position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--color-bg);box-shadow:0 -1px 0 var(--color-divider)">
+    <div style="max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);padding:0 var(--space-2) env(safe-area-inset-bottom)">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+        <button class="btn" style="min-height:64px;font-size:16px;color:{{ t.color }};box-shadow:{{ t.bar }};border-radius:0" onClick="{{ t.go }}" aria-current="{{ t.current }}">{{ t.label }}</button>
+      </sc-for>
+    </div>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:860},&quot;numerals&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;plates&quot;,&quot;plain&quot;],&quot;default&quot;:&quot;plates&quot;,&quot;tsType&quot;:&quot;'plates'|'plain'&quot;},&quot;startTab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;days&quot;,&quot;route&quot;,&quot;fees&quot;,&quot;hotels&quot;],&quot;default&quot;:&quot;days&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const COUNTRIES = [
+  { code: 'SK', name: 'Slovakia', km: 20, price: 1.85, stops: [{ n: 'Bratislava', note: 'Start · leave full' }] },
+  { code: 'HU', name: 'Hungary', km: 390, price: 1.77, stops: [{ n: 'M1', note: 'Motorway' }, { n: 'Nădlac', note: 'Border into Romania', b: 1 }] },
+  { code: 'RO', name: 'Romania', km: 695, price: 1.87, stops: [{ n: 'A1', note: 'Motorway' }, { n: 'Sibiu', note: 'Night 1', night: 1 }, { n: 'Pitești', note: 'Day 2' }, { n: 'Giurgiu–Ruse', note: 'Bridge into Bulgaria', b: 1 }] },
+  { code: 'BG', name: 'Bulgaria', km: 400, price: 1.66, tag: 'Cheapest fill', tagCls: 'tag tag-accent', stops: [{ n: 'Veliko Tarnovo', note: 'A2' }, { n: 'Stara Zagora', note: 'Fill to the brim' }, { n: 'Ormenio', note: 'Border into Greece', b: 1 }] },
+  { code: 'GR', name: 'Greece', km: 900, price: 2.19, tag: '+€0.53/L', tagCls: 'tag tag-accent-2', stops: [{ n: 'Alexandroupoli', note: 'Night 2', night: 1 }, { n: 'Kavala', note: 'A2 Egnatia' }, { n: 'Thessaloniki', note: 'Day 3' }, { n: 'A1', note: 'Fuel stop ~400 km in' }, { n: 'Athens', note: 'Arrive', night: 1 }] }
+];
+const DAYS = [
+  { km: 815, split: { SK: 20, HU: 390, RO: 405 } },
+  { km: 800, split: { RO: 290, BG: 400, GR: 110 } },
+  { km: 790, split: { GR: 790 } }
+];
+const PRICE = { SK: 1.85, HU: 1.77, RO: 1.87, BG: 1.66, GR: 2.19 };
+const TOLLS = [
+  { name: 'A2 Egnatia', items: [['Mesti / Komotini', 2.75], ['Iasmos / Xanthi', 2.25], ['Kavala', 2.30], ['Moustheni', 2.65], ['Asprovalta', 1.40], ['Analipsi', 2.90]] },
+  { name: 'A1 to Athens', items: [['Malgara', 1.15], ['Kleidi / Aeginio', 2.60], ['Leptokarya', 3.80], ['Makrychori / Larissa', 3.00], ['Moschochori / Kileler', 4.70], ['Pelasgia', 4.10], ['Mavromantila', 2.25], ['Agios Konstantinos', 2.10], ['Traganas', 4.55], ['Thiva', 4.55], ['Afidnes', 3.90]] }
+];
+const HOTELS = {
+  n1: [
+    { id: 'merc-air', name: 'Mercure Sibiu Airport', stars: '4★', breakfast: 'Included', parking: 'Free', detour: 'Ring road, ~5 min, on the side you arrive from Deva', price: 'from ~$76', onRoute: true },
+    { id: 'arsenal', name: 'Mercure Sibiu Arsenal', stars: 'Not stated', breakfast: 'Not on every rate', parking: 'Not stated', detour: 'In town', price: '$87–113', extra: 'Pool, fitness.' },
+    { id: 'exclusive', name: 'Exclusive Hotel and More', stars: '4★', breakfast: 'Included', parking: 'Free', detour: 'Check on map', price: '~$80' }
+  ],
+  n2: [
+    { id: 'ramada', name: 'Ramada Plaza by Wyndham Thraki', stars: '5★', breakfast: 'Buffet', parking: 'Yes', detour: 'Km 4 of the Alexandroupoli–Thessaloniki road', price: '$104–133', onRoute: true, extra: 'Beach, spa, two pools, gym.' },
+    { id: 'plaza', name: 'Plaza Hotel', stars: '2★', breakfast: 'Included', parking: 'Not stated', detour: 'Km 2, beachfront', price: '~$85', extra: 'Weaker reviews.' }
+  ]
+};
+const KEY = 'bta-trip-v1';
+const E = encodeURIComponent;
+const gdir = (o, d, w) => 'https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=' + E(o) + '&destination=' + E(d) + (w.length ? '&waypoints=' + E(w.join('|')) : '');
+const CITY = { n1: 'Sibiu, Romania', n2: 'Alexandroupoli, Greece' };
+const hq = (h, k) => h.name + ', ' + CITY[k];
+const eur0 = v => '€' + Math.round(v).toLocaleString('en-GB');
+const eur2 = v => '€' + v.toFixed(2);
+const hm = h => { const m = Math.round(h * 60); return Math.floor(m / 60) + ' h ' + String(m % 60).padStart(2, '0'); };
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+    this.state = Object.assign({ tab: props.startTab ?? 'days', speed: 105, cons: 6.2, huTen: false, bgWeek: false, bridge: false, bought: {}, paid: {}, hotel: { n1: 'merc-air', n2: 'ramada' }, adjust: false, tollsOpen: false }, saved);
+  }
+  componentDidUpdate() {
+    const { tab, speed, cons, huTen, bgWeek, bridge, bought, paid, hotel } = this.state;
+    try { localStorage.setItem(KEY, JSON.stringify({ tab, speed, cons, huTen, bgWeek, bridge, bought, paid, hotel })); } catch (e) {}
+  }
+  set(patch) { this.setState(patch); }
+  renderVals() {
+    const s = this.state, c = s.cons, v = s.speed;
+    const hu = s.huTen ? 18.90 : 15.20, bg = s.bgWeek ? 10 : 5.30, br = s.bridge ? 3 : 0;
+    const feeLines = [
+      [{ label: 'Slovakia e-známka, 1 day', price: 8.10 }, { label: s.huTen ? 'Hungary D1 e-matrica, 10 days' : 'Hungary D1 e-matrica, 1 day', price: hu }, { label: 'Romania Rovinieta, 10 days', price: 5.70 }],
+      [{ label: s.bgWeek ? 'Bulgaria e-vignette, week' : 'Bulgaria e-vignette, 1 day', price: bg }, { label: 'Giurgiu–Ruse bridge', price: br }],
+      [{ label: 'Greece, 17 toll stations', price: 50.95 }]
+    ];
+    let T = { km: 0, l: 0, fuel: 0, fees: 0 };
+    const days = DAYS.map((d, i) => {
+      const l = d.km * c / 100;
+      const fuel = Object.entries(d.split).reduce((a, [k, km]) => a + km * c / 100 * PRICE[k], 0);
+      const fees = feeLines[i].reduce((a, x) => a + x.price, 0);
+      const pure = d.km / v;
+      T.km += d.km; T.l += l; T.fuel += fuel; T.fees += fees;
+      return { km: d.km, pure: hm(pure), elapsed: hm(pure + 0.5), litres: l.toFixed(1), fuel: eur0(fuel), fees: i === 1 ? eur2(fees) : eur0(fees), cash: eur0(fuel + fees), lines: feeLines[i].map(x => ({ label: x.label, price: eur2(x.price) })) };
+    });
+    const tollGroups = TOLLS.map(g => ({
+      name: g.name, total: eur2(g.items.reduce((a, x) => a + x[1], 0)),
+      items: g.items.map(([name, price]) => { const paid = !!s.paid[name]; return { name, price: price.toFixed(2), paid, op: paid ? 0.5 : 1, toggle: () => this.set({ paid: { ...s.paid, [name]: !paid } }) }; })
+    }));
+    const left = TOLLS.flatMap(g => g.items).filter(x => !s.paid[x[0]]).reduce((a, x) => a + x[1], 0);
+    const vig = [
+      { id: 'sk', shop: 'eznamka.sk', url: 'https://eznamka.sk/en', country: 'Slovakia', price: '€8.10', what: '1-day e-známka. The D2 spur from the D4 to the Hungarian border at Čunovo is tolled.' },
+      { id: 'hu', shop: 'ematrica.nemzetiutdij.hu', url: 'https://ematrica.nemzetiutdij.hu/en', country: 'Hungary', price: eur2(hu), what: s.huTen ? 'D1 e-matrica, 10 days.' : 'D1 e-matrica, 1 day. Official price HUF 5,550.' },
+      { id: 'ro', shop: 'erovinieta.ro', url: 'https://www.erovinieta.ro', country: 'Romania', price: '€5.70', what: 'Rovinieta category A, Euro 6, 10 days. Official price 30 lei. Enter Euro 6: a blank Euro class is charged as Euro 0.' },
+      { id: 'bg', shop: 'web.bgtoll.bg', url: 'https://web.bgtoll.bg', country: 'Bulgaria', price: eur2(bg), what: s.bgWeek ? 'e-vignette, weekly, car up to 3.5 t.' : 'e-vignette, 1 day, car up to 3.5 t.' }
+    ].map(f => { const b = !!s.bought[f.id]; return { ...f, bought: b, label: b ? 'Bought ✓' : 'Buy', cls: b ? 'btn btn-primary' : 'btn btn-secondary', toggle: () => this.set({ bought: { ...s.bought, [f.id]: !b } }) }; });
+    const adders = [
+      { k: 'huTen', label: 'Still in Hungary after midnight: 10-day D1', delta: '+€3.70' },
+      { k: 'bgWeek', label: 'Bulgarian leg crosses the 24-hour window: weekly vignette', delta: '+€4.70' },
+      { k: 'bridge', label: 'Giurgiu booth still asks: 15 lei', delta: '+€3' }
+    ].map(a => ({ ...a, on: !!s[a.k], toggle: () => this.set({ [a.k]: !s[a.k] }) }));
+    const nights = [['n1', 'Night 1', 'Sibiu'], ['n2', 'Night 2', 'Alexandroupoli']].map(([k, label, city]) => ({
+      label, city, hotels: HOTELS[k].map(h => { const sel = s.hotel[k] === h.id; return { ...h, extra: h.extra || '', selected: sel, booking: 'https://www.booking.com/searchresults.html?ss=' + E(hq(h, k)), map: 'https://www.google.com/maps/search/?api=1&query=' + E(hq(h, k)), ring: sel ? 'inset 0 0 0 2px var(--color-accent)' : 'none', pick: () => this.set({ hotel: { ...s.hotel, [k]: h.id } }) }; })
+    }));
+    const pick = k => HOTELS[k].find(h => h.id === s.hotel[k]) || HOTELS[k][0];
+    const tabs = [['days', 'Days'], ['route', 'Route'], ['fees', 'Fees'], ['hotels', 'Hotels']].map(([id, label]) => ({
+      label, current: s.tab === id ? 'page' : undefined, color: s.tab === id ? 'var(--color-accent-700)' : 'var(--color-text)', bar: s.tab === id ? 'inset 0 3px 0 var(--color-accent)' : 'none',
+      go: () => { this.set({ tab: id }); window.scrollTo(0, 0); }
+    }));
+    const p1 = hq(pick('n1'), 'n1'), p2 = hq(pick('n2'), 'n2');
+    days[0].maps = gdir('Bratislava, Slovakia', p1, ['Nădlac, Romania']);
+    days[1].maps = gdir(p1, p2, ['Pitești, Romania', 'Giurgiu, Romania', 'Ruse, Bulgaria', 'Veliko Tarnovo, Bulgaria', 'Stara Zagora, Bulgaria', 'Ormenio, Greece']);
+    days[2].maps = gdir(p2, 'Athens, Greece', ['Kavala, Greece', 'Thessaloniki, Greece']);
+    const plates = (this.props.numerals ?? 'plates') === 'plates';
+    return {
+      tot: { km: T.km.toLocaleString('en-GB'), litres: Math.round(T.l), fuel: eur0(T.fuel), fees: eur0(T.fees), feesExact: eur2(T.fees), cost: eur0(T.fuel + T.fees) },
+      speed: v, cons: c, consLabel: c.toFixed(1), rangeKm: Math.round(36 / c * 100), tanks: (T.l / 36).toFixed(1),
+      adjust: s.adjust, adjustLabel: s.adjust ? 'Done' : 'Adjust', toggleAdjust: () => this.set({ adjust: !s.adjust }),
+      stickyShadow: s.adjust ? 'var(--shadow-md)' : '0 1px 0 var(--color-divider)',
+      onSpeed: e => this.set({ speed: +e.target.value }), onCons: e => this.set({ cons: Math.round(+e.target.value * 10) / 10 }),
+      presets: [[5.2, 'careful'], [6.2, 'this trip'], [6.7, '130 cruise']].map(([p, label]) => ({ v: p.toFixed(1), label, cls: Math.abs(c - p) < 0.01 ? 'btn btn-primary' : 'btn btn-secondary', set: () => this.set({ cons: p }) })),
+      isDays: s.tab === 'days', isRoute: s.tab === 'route', isFees: s.tab === 'fees', isHotels: s.tab === 'hotels',
+      d1: days[0], d2: days[1], d3: days[2],
+      plates, plain: !plates,
+      tollsOpen: s.tollsOpen, toggleTolls: () => this.set({ tollsOpen: !s.tollsOpen }), tollsChevron: s.tollsOpen ? 'Hide' : 'Show',
+      tollGroups, tollsLeft: eur2(left),
+      countries: COUNTRIES.map(k => ({ ...k, tag: k.tag || '', tagCls: k.tagCls || '', litres: (k.km * c / 100).toFixed(1), fuel: eur0(k.km * c / 100 * k.price), price: k.price.toFixed(2),
+        stops: k.stops.map(st => ({ ...st, dot: st.night ? 'var(--color-accent-2)' : st.b ? 'var(--color-text)' : 'var(--color-accent)', weight: st.night || st.b ? 600 : 400 })) })),
+      vignettes: vig, boughtCount: vig.filter(f => f.bought).length, bridgePrice: eur2(br), adders,
+      nights, pick1: pick('n1'), pick2: pick('n2'), goHotels: () => { this.set({ tab: 'hotels' }); window.scrollTo(0, 0); },
+      tabs
+    };
+  }
+}
+</script>
+</body>
+</html>
