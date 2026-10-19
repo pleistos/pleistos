@@ -1,0 +1,132 @@
+/* App layer over the Broadsheet stylesheet. Values mirror the Claude Design
+   prototype (Bratislava to Athens.dc.html); tokens come from styles.css. */
+
+body { margin: 0; background: var(--color-bg); }
+a { color: var(--color-accent-700); }
+a:hover { color: var(--color-accent-800); }
+a.btn { text-decoration: none; }
+input[type=range] { width: 100%; height: 44px; margin: 0; accent-color: var(--color-accent); }
+input[type=checkbox] { width: 22px; height: 22px; margin: 0; accent-color: var(--color-accent); flex: none; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+h1, h2, h3 { text-wrap: balance; }
+
+.app { max-width: 480px; margin: 0 auto; font-size: 17px; line-height: 1.5; color: var(--color-text); padding-bottom: 110px; }
+.muted { color: var(--color-neutral-700); }
+.small { font-size: 13px; }
+.prose { font-size: 15px; color: var(--color-neutral-800); text-wrap: pretty; }
+.eyebrow { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-700); }
+.eyebrow.accent { color: var(--color-accent-700); }
+.eyebrow.accent-2 { color: var(--color-accent-2-700); }
+.caps { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-neutral-700); }
+.row { display: flex; justify-content: space-between; gap: var(--space-3); }
+.row-baseline { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
+
+/* — masthead — */
+.masthead { padding: var(--space-6) var(--space-4) var(--space-2); }
+.masthead h1 { font-size: 38px; margin: var(--space-1) 0; }
+.masthead .sub { font-size: 14px; color: var(--color-neutral-700); }
+
+/* — sticky totals — */
+.totals { position: sticky; top: 0; z-index: 5; background: var(--color-bg); padding: var(--space-3) var(--space-4); box-shadow: 0 1px 0 var(--color-divider); }
+.totals.open { box-shadow: var(--shadow-md); }
+.totals-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-3); }
+.totals-cost { display: flex; flex-direction: column; }
+.totals-cost .label { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-neutral-700); }
+.totals-cost .figure { font-family: var(--font-heading); font-weight: 600; font-size: 40px; line-height: 1; font-variant-numeric: tabular-nums; }
+.totals-side { display: flex; flex-direction: column; align-items: flex-end; font-size: 15px; line-height: 1.35; text-align: right; }
+.totals-meta { display: flex; justify-content: space-between; align-items: center; margin-top: var(--space-2); }
+.adjust-btn { min-height: 44px; font-size: 15px; }
+.adjust { display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-2) 0 var(--space-3); }
+.adjust[hidden] { display: none; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; }
+.presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
+.presets .btn { min-height: 52px; flex-direction: column; gap: 0; font-size: 15px; padding: var(--space-1); }
+.presets .btn span + span { font-size: 11px; font-weight: 400; }
+.presets-note { margin-top: var(--space-2); }
+
+main { padding: 0 var(--space-4); }
+.screen { padding-top: var(--space-6); }
+.screen > h2 { font-size: 27px; }
+
+/* — days — */
+.days { display: flex; flex-direction: column; gap: 56px; }
+.day-head { display: flex; align-items: flex-end; gap: var(--space-4); }
+.day-num { display: inline-block; font-family: var(--font-heading); font-weight: 600; font-size: 72px; }
+.day-num.plain { line-height: 0.9; }
+.day-head h2 { font-size: 27px; margin: 0; }
+.day-roads { font-size: 15px; margin: var(--space-3) 0; color: var(--color-neutral-800); text-wrap: pretty; }
+.maps-btn { width: 100%; min-height: 52px; font-size: 16px; margin-bottom: var(--space-4); }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4) var(--space-3); }
+.stat-label { font-size: 12px; color: var(--color-neutral-700); }
+.stat-value { font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.fee-lines { margin-top: var(--space-4); font-size: 15px; }
+.fee-lines .title { font-weight: 600; margin-bottom: var(--space-1); }
+.fee-lines .row { padding: 4px 0; }
+.cash { display: flex; justify-content: space-between; align-items: baseline; margin-top: var(--space-3); font-size: 19px; }
+.note { margin-top: var(--space-4); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); font-size: 16px; text-wrap: pretty; background: var(--color-accent-100); color: var(--color-accent-900); }
+.note + .note { margin-top: var(--space-3); }
+.note.warn { background: var(--color-accent-2-100); color: var(--color-accent-2-900); }
+.bridge-note { font-size: 14px; margin: var(--space-3) 0 0; color: var(--color-neutral-800); text-wrap: pretty; }
+.wide-btn { width: 100%; justify-content: space-between; min-height: 52px; margin-top: var(--space-3); font-size: 16px; }
+.wide-btn > span:last-child { font-weight: 400; }
+.sleep-btn { min-height: 56px; margin-top: var(--space-4); text-align: left; }
+.sleep-btn .stack { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.sleep-btn .stack span:first-child { font-size: 12px; font-weight: 400; color: var(--color-neutral-700); }
+.arrive { margin-top: var(--space-4); font-size: 16px; }
+
+/* — toll checklist — */
+.toll-groups { display: flex; flex-direction: column; gap: var(--space-4); }
+.toll-groups.inline { margin-top: var(--space-3); }
+.toll-groups .caps { display: flex; justify-content: space-between; padding-bottom: 4px; }
+.check { display: flex; align-items: center; gap: var(--space-3); min-height: 44px; cursor: pointer; font-size: 16px; }
+.check.paid .name, .check.paid .price { opacity: 0.5; }
+.check .name { flex: 1; text-wrap: pretty; }
+.check.adder { min-height: 56px; }
+.check.adder .price { white-space: nowrap; color: var(--color-neutral-700); }
+
+/* — route rail — */
+.countries { display: flex; flex-direction: column; gap: var(--space-6); margin-top: var(--space-4); }
+.countries h3 { font-size: 23px; margin: 0; }
+.cstats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2); margin: var(--space-2) 0 var(--space-3); font-size: 15px; }
+.cstats .k { font-size: 11px; color: var(--color-neutral-700); }
+.rail { display: flex; flex-direction: column; border-left: 2px solid var(--color-accent-300); margin-left: 6px; }
+.stop { display: flex; align-items: center; gap: var(--space-3); min-height: 40px; margin-left: -8px; }
+.stop .dot { width: 14px; height: 14px; border-radius: 50%; flex: none; background: var(--color-accent); box-shadow: 0 0 0 3px var(--color-bg); }
+.stop.border .dot { background: var(--color-text); }
+.stop.night .dot { background: var(--color-accent-2); }
+.stop .n { font-size: 17px; }
+.stop.border .n, .stop.night .n { font-weight: 600; }
+.stop .note-txt { font-size: 13px; color: var(--color-neutral-700); }
+
+/* — fees — */
+.fees { display: flex; flex-direction: column; gap: var(--space-4); margin-top: var(--space-4); }
+.fee { display: flex; gap: var(--space-3); align-items: flex-start; }
+.fee-body { flex: 1; min-width: 0; }
+.fee-title { display: flex; justify-content: space-between; gap: var(--space-2); font-size: 18px; }
+.fee-what { font-size: 14px; color: var(--color-neutral-800); text-wrap: pretty; }
+.fee-shop { display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; }
+.buy-btn { min-height: 44px; min-width: 84px; }
+.section-h { font-size: 21px; margin-top: var(--space-8); }
+.fees-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: var(--space-4); font-size: 21px; }
+
+/* — hotels — */
+.nights { display: flex; flex-direction: column; gap: var(--space-8); }
+.nights h2 { font-size: 27px; }
+.hotel-list { display: flex; flex-direction: column; gap: var(--space-3); }
+.hotel { padding: var(--space-4); }
+.hotel.selected { box-shadow: inset 0 0 0 2px var(--color-accent); }
+.hotel-pick { display: flex; flex-direction: column; gap: var(--space-2); text-align: left; font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; width: 100%; }
+.hotel-tags { display: flex; gap: var(--space-2); flex-wrap: wrap; min-height: 20px; }
+.hotel .card-title { font-size: 20px; }
+.hotel-price { white-space: nowrap; font-weight: 600; }
+.facts { display: grid; grid-template-columns: auto 1fr; gap: 4px var(--space-3); font-size: 15px; }
+.facts .k { color: var(--color-neutral-700); }
+.hotel-extra { font-size: 14px; color: var(--color-neutral-800); }
+.hotel-links { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); margin-top: var(--space-1); }
+.hotel-links .btn { min-height: 44px; }
+
+/* — tab bar — */
+.tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: var(--color-bg); box-shadow: 0 -1px 0 var(--color-divider); }
+.tabbar-inner { max-width: 480px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); padding: 0 var(--space-2) env(safe-area-inset-bottom); }
+.tabbar .btn { min-height: 64px; font-size: 16px; border-radius: 0; color: var(--color-text); }
+.tabbar .btn[aria-current=page] { color: var(--color-accent-700); box-shadow: inset 0 3px 0 var(--color-accent); }

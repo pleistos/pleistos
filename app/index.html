@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3f2f2">
+<title>Bratislava → Athens</title>
+<link rel="stylesheet" href="vendor/broadsheet/styles.css">
+<link rel="stylesheet" href="app.css">
+<script src="vendor/broadsheet/_ds_bundle.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <header class="masthead">
+    <div class="eyebrow">3-day low-snow motorway drive</div>
+    <h1>Bratislava → Athens</h1>
+    <div class="sub">2023 Mazda 2 Hybrid · 95 unleaded · 36 L tank</div>
+  </header>
+
+  <div class="totals" id="totals">
+    <div class="totals-row">
+      <div class="totals-cost">
+        <span class="label">Driving cost</span>
+        <span class="figure" id="t-cost"></span>
+      </div>
+      <div class="totals-side">
+        <span><strong id="t-km"></strong> km · <strong id="t-litres"></strong> L</span>
+        <span class="muted">fuel <span id="t-fuel"></span> · fees <span id="t-fees"></span></span>
+      </div>
+    </div>
+    <div class="totals-meta">
+      <span class="small muted"><span class="js-speed"></span> km/h · <span class="js-cons"></span> L/100 km</span>
+      <button class="btn btn-ghost adjust-btn" id="adjust-btn" aria-expanded="false" aria-controls="adjust">Adjust</button>
+    </div>
+    <div class="adjust" id="adjust" hidden>
+      <div>
+        <div class="slider-head"><span>Planning speed, blended</span><strong><span class="js-speed"></span> km/h</strong></div>
+        <input type="range" id="speed" min="90" max="125" step="1" aria-label="Planning speed">
+        <div class="small muted">Default 105. Borders, towns and roadworks pull the average below the 130 limit. Plus 3 × 10 min stops a day.</div>
+      </div>
+      <div>
+        <div class="slider-head"><span>Burn</span><strong><span class="js-cons"></span> L/100 km</strong></div>
+        <input type="range" id="cons" min="5.2" max="6.7" step="0.1" aria-label="Fuel consumption">
+        <div class="presets" id="presets"></div>
+        <div class="small muted presets-note">Full tank ≈ <span id="range-km"></span> km at this burn. Plan fills around 450 km.</div>
+      </div>
+    </div>
+  </div>
+
+  <main id="view"></main>
+
+  <nav class="tabbar" aria-label="Sections">
+    <div class="tabbar-inner" id="tabs"></div>
+  </nav>
+</div>
+<script src="model.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
