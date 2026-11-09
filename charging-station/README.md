@@ -10,7 +10,7 @@ included.
 |---|---|---|
 | Phone (centre, 68° stand) | Magnetic Qi2 puck, such as the Google Pixelsnap Charger | The puck sits in a recess. The phone's Pixelsnap magnets hold it on, and a front lip catches the bottom edge. The lip has a gap for the USB-C port. |
 | Watch (left pillar, 45 mm tall) | Official Pixel Watch 4/5 Quick Charge Dock (41 × 27 × 9.6 mm) | The dock sits 6 mm deep in a pocket. The pillar is tall so the band hangs free. |
-| Earbuds (right well) | Thin round Qi pad (default Ø60 × 6 mm) | The pad sits at the bottom of the well. The case lies on it, and finger notches let you lift it out. |
+| Earbuds (right stand, 75°) | Thin round Qi pad (default Ø60 × 6 mm) | The case stands upright on its bottom edge in a slot and leans back against the pad, which is set into the sloped face. A front lip stops it sliding. |
 
 All three cables drop through holes big enough for a USB-C plug. They run
 in grooves on the underside and come out at the back.
@@ -26,8 +26,12 @@ Values marked `(!)` in the file are estimates:
    it leaves the centre.
 3. **`phone_w`, `phone_t`**: width and bottom-edge thickness of the phone
    *with its case on*.
-4. **`case_l`, `case_w`**: the earbud case lying on its back. Published
-   figures don't agree, so use calipers.
+4. **`case_w`, `case_h`, `case_t`, `case_coil`**: the earbud case standing
+   upright (width, height, thickness) and the height of its charging coil
+   above the bottom edge. The default puts the coil in the middle of the
+   back face. Published sizes don't agree, so use calipers. If the case
+   only charges when the pad is held against one particular face, that
+   face goes against the sloped face.
 5. **`qi_pad_d`, `qi_pad_t`**: your Qi pad.
 
 Tip: print a test piece first. Wrap the model in
