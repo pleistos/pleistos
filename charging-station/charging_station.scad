@@ -20,14 +20,21 @@
 //
 //  Print: as-is, flat on the bed, no supports needed. 0.2 mm layers,
 //  3 walls, 15 % gyroid infill, PETG or PLA.  Footprint is printed in the
-//  console (fits a 220 x 220 mm bed with the defaults).
+//  console. Defaults are sized for a Creality K1C (220 x 220 x 250 mm) with
+//  room for a skirt/brim; an assert stops the render if it no longer fits.
 // =====================================================================
+
+/* [Printer - Creality K1C: 220 x 220 x 250 mm] */
+bed_x      = 220;
+bed_y      = 220;
+bed_z      = 250;
+bed_keepout = 8;      // room left for skirt/brim and bed-edge tolerance
 
 /* [General] */
 $fn        = 96;
 clr        = 0.6;     // fit clearance added around pockets
-margin     = 5;       // base border around the modules
-gap        = 7;       // gap between modules
+margin     = 4;       // base border around the modules
+gap        = 5;       // gap between modules (phone edge to neighbours)
 base_t     = 8;       // base plate thickness
 corner_r   = 8;       // base corner radius
 
@@ -71,7 +78,7 @@ qi_pad_d     = 60;    // (!) diameter of your round Qi pad
 qi_pad_t     = 6;     // (!) thickness of the Qi pad
 qi_pad_proud = 0;     // pad face flush with the sloped face
 qi_cable_exit = "side";
-buds_wall    = 4;     // wedge extends this much past the case each side
+buds_wall    = 3;     // wedge wall around the Qi pad recess
 
 /* [Cables] */
 plug_w    = 14.5;   // pass-through holes must fit the USB-C plug
@@ -97,7 +104,7 @@ function stand_depth(item_t, coil, chg_d, ang) =
 pillar_l   = dock_l + 2*clr + 2*pillar_wall;  // along Y (front-back)
 pillar_w   = dock_w + 2*clr + 2*pillar_wall;  // along X
 
-buds_w     = max(case_w, qi_pad_d) + 2*clr + 2*buds_wall;
+buds_w     = max(case_w + 2*clr, qi_pad_d + 2*clr + 2*buds_wall);
 
 phone_depth = stand_depth(phone_t, coil_from_bot, puck_d, phone_angle);
 buds_depth  = stand_depth(case_t, case_coil, qi_pad_d, case_angle);
@@ -115,8 +122,12 @@ D = max(phone_depth, buds_depth, pillar_l) + 2*margin;
 y_lip    = margin;
 yc_watch = D/2;
 
-echo(str("Footprint: ", W, " x ", D, " mm, height ",
-         base_t + face_len(coil_from_bot, puck_d)*sin(phone_angle), " mm"));
+H = base_t + face_len(coil_from_bot, puck_d)*sin(phone_angle);
+echo(str("Footprint: ", W, " x ", D, " mm, height ", H, " mm"));
+// Fail loudly if your parameter changes make it too big for the bed.
+// (It can also be rotated diagonally in the slicer: the bed diagonal is ~311 mm.)
+assert(W <= bed_x - 2*bed_keepout && D <= bed_y - 2*bed_keepout && H <= bed_z,
+       str("Model (", W, " x ", D, " x ", H, ") does not fit the bed with keep-out"));
 
 // ---------------------------------------------------------------------
 //  Helpers
@@ -181,6 +192,13 @@ module stand_cuts(xc, item_t, ang, coil, chg_d, chg_t, proud, exit,
     difference() {
         union() {
             on_face(coil) translate([0, 0, -rec]) cylinder(d = chg_d + 2*clr, h = rec + 5);
+            // self-supporting ceiling: the top of the recess slopes outward
+            // (adds a small hidden gap above the charger, no supports needed)
+            hull() {
+                on_face(coil)               translate([0, 0, -rec]) cylinder(d = chg_d + 2*clr, h = 0.01);
+                on_face(coil + 0.7*rec)     cylinder(d = chg_d + 2*clr, h = 0.01);
+                on_face(coil)               cylinder(d = chg_d + 2*clr, h = 0.01);
+            }
             if (exit == "side")
                 on_face(0) translate([-cable_w/2, -5, -rec]) cube([cable_w, coil + 5, rec + 5]);
         }

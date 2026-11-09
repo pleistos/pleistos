@@ -38,10 +38,23 @@ Tip: print a test piece first. Wrap the model in
 `intersection(){ ... ; translate([...]) cube(...); }` to print just
 one pocket.
 
-## Print settings
-- Print it flat, as oriented. No supports needed.
-- 0.2 mm layers, 3 walls, 15 % gyroid infill, PLA or PETG.
-- The default footprint is 217 × 83 mm, which fits a 220 × 220 bed.
+## Print settings (Creality K1C / K1C 2025: 220 × 220 × 250 mm)
+- **It prints in one piece on the K1C.** The model is 203.4 × 80.5 ×
+  126.7 mm, which leaves about 8 mm on each side for a skirt or brim. A test slice
+  on a 220 × 220 bed kept all extrusion between X 4.9 and 215 mm, and the top
+  is at Z 126.6 of 250 mm.
+- Print it flat, as oriented, with the long side along X. **No supports**: the
+  charger recess ceilings are sloped so they print without them.
+- 0.2 mm layers, 3 walls, 15 % gyroid infill, PLA or PETG. Expect about
+  **205 g** of PLA and about **6–7 h** at K1C speeds. That's an estimate from a
+  PrusaSlicer test slice with K1C-like limits; Creality Print will give its own
+  figure.
+- Use smooth PEI or textured PEI with glue stick for PETG. A brim isn't
+  needed, but there's room for a 5 mm one if your bed is cold-cornered.
+- The `.scad` file has the printer size set at the top (`bed_x/y/z`). An
+  `assert` stops the render if your changes make the model too big. If
+  that happens, you can still rotate it diagonally in the slicer: the
+  diagonal is about 311 mm.
 - Use 10 mm self-adhesive rubber feet in the four recesses. Optionally,
   add a few coins or steel washers in the wedge (pause the print) for
   extra weight.
