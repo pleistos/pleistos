@@ -50,10 +50,12 @@ lip_t          = 4;
 usb_gap_w      = 22;    // cut-out in the lip for the phone's USB-C port
 
 /* [Phone charger puck] */
-puck_d          = 60;   // (!) diameter of your magnetic Qi2 puck
-puck_t          = 7.5;  // (!) thickness of the puck
+// Defaults fit the Google Pixelsnap Charger (Qi2.2, 25 W): 56 x 5.4 mm
+puck_d          = 56;   // diameter of your magnetic Qi2 puck
+puck_t          = 5.4;  // thickness of the puck
 puck_proud      = 0.4;  // puck stands this much proud of the face
-puck_cable_exit = "side"; // "side" = cable leaves the puck edge
+puck_cable_exit = "both"; // "side" = cable leaves the puck edge
+                          // "both" = cut both routes (works for either)
                           // "back" = cable leaves the centre of the back
 puck_cable_w    = 7;    // width of the strain-relief / cable slot
 
@@ -199,17 +201,19 @@ module stand_cuts(xc, item_t, ang, coil, chg_d, chg_t, proud, exit,
                 on_face(coil + 0.7*rec)     cylinder(d = chg_d + 2*clr, h = 0.01);
                 on_face(coil)               cylinder(d = chg_d + 2*clr, h = 0.01);
             }
-            if (exit == "side")
+            if (exit == "side" || exit == "both")
                 on_face(0) translate([-cable_w/2, -5, -rec]) cube([cable_w, coil + 5, rec + 5]);
         }
         translate([xc - 200, y_lip - 1, -1]) cube([400, yf - y_lip + 1, z0 + 1]);
     }
 
-    if (exit == "side") {
+    if (exit == "side" || exit == "both") {
         // ...then down through the base just behind the face
         vertical_pass(xc, yf + plug_h/2 + 2, z0 + 22, 0);
         groove_to_back(xc, yf + 2);
-    } else {
+    }
+    if (exit == "back" || exit == "both") {
+        // straight out of the back of the wedge, behind the charger centre
         p = [xc, yf + coil*cos(ang), z0 + coil*sin(ang)];
         translate(p) rotate([-90, 0, 0]) linear_extrude(L) obround(plug_w, plug_h);
     }
